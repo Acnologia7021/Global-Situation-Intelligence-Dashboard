@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Global Situation Intelligence Dashboard
 
-## Getting Started
+A single-page AI dashboard that fuses live global risk signals into one map, one insight stream, and one lightweight scenario engine.
 
-First, run the development server:
+## What this MVP already does
+
+- Ingests live official feeds from GDACS, USGS, and NASA EONET
+- Normalizes them into one shared `IntelligenceEvent` model
+- Deduplicates nearby events across sources into fused watchpoints
+- Generates one-line AI-style insights
+- Projects short-horizon impact scenarios
+- Shows the result on a global map with sector and regional risk views
+
+## Run it locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Gemini 2.5 Flash setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+If you want the dashboard to use Gemini for faster narrative rewriting:
 
-## Learn More
+1. Copy `.env.example` to `.env.local`
+2. Set `GEMINI_API_KEY`
+3. Keep `GEMINI_MODEL=gemini-2.5-flash` unless you want to override it
 
-To learn more about Next.js, take a look at the following resources:
+How it works:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- The first paint uses the built-in heuristic narrative layer for speed.
+- After mount, the client refreshes in the background and upgrades the headline and insights through Gemini when your key is present.
+- If Gemini times out or the key is missing, the dashboard falls back automatically.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Architecture
 
-## Deploy on Vercel
+- `src/lib/intelligence.ts`
+  The live intelligence engine. Fetches feeds, normalizes events, fuses overlapping signals, scores severity, and creates prediction cards.
+- `src/app/api/intelligence/route.ts`
+  JSON API route for client refresh and future integrations.
+- `src/components/dashboard-shell.tsx`
+  Main dashboard UI with polling, filtering, map, insights, and scenario cards.
+- `src/components/world-map.tsx`
+  SVG world map rendered with `d3-geo` and `world-atlas`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Live data sources
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- GDACS: global disaster awareness and coordination signals
+- USGS: earthquake details and seismic significance
+- NASA EONET: active natural event monitoring
+
+## How to turn this into a stronger product
+
+1. Add premium world news and conflict feeds, then build multilingual article clustering.
+2. Replace heuristic impact scoring with causal graphs and calibrated probability outputs.
+3. Add user exposure graphs for suppliers, ports, factories, offices, and watchlists.
+4. Track event revisions over time and generate change-aware summaries instead of full rewrites.
+5. Add scenario branching such as port closure duration, conflict escalation, or storm path shift.
+
+## Patent-oriented directions
+
+The UI itself is not enough for defensibility. The more promising invention layer is:
+
+- streaming evidence fusion into a continuously updated event object
+- contradiction handling across noisy sources
+- exposure-conditioned forecasting based on a user asset graph
+- second-order ripple prediction across sectors and regions
+
+That technical pipeline is what should later be documented, benchmarked, and discussed with patent counsel.

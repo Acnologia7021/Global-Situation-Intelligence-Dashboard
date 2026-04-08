@@ -1,0 +1,18 @@
+
+> global-situation-intelligence-dashboard@0.1.0 dev
+> next dev --hostname 0.0.0.0
+
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://0.0.0.0:3000
+✓ Ready in 1853ms
+Creating turbopack project {
+  dir: 'C:\\Users\\MSI-1\\Desktop\\Global Situation Intelligence Dashboard',
+  testMode: true
+}
+
+ GET / 200 in 5.2s (next.js: 2.8s, application-code: 2.3s)
+ GET /index.html 404 in 437ms (next.js: 375ms, application-code: 62ms)
+ GET /index.html 404 in 129ms (next.js: 92ms, application-code: 37ms)
+ GET /index.html 404 in 57ms (next.js: 9ms, application-code: 48ms)
+ GET /index.html 404 in 67ms (next.js: 13ms, application-code: 54ms)
